@@ -7,6 +7,13 @@ function DiaryEditor() {
     content: "",     // 일기 내용 상태
   });   
 
+  const handleChangeState = (e) => {
+    setState({
+      ...state,
+      [e.target.name] : e.target.value,
+    })
+  }
+
   const authorChange = (e) => {
     setState({
       ...state,      // spread 연산자 사용 
@@ -26,14 +33,16 @@ function DiaryEditor() {
       <h2>오늘의 일기</h2>
       <div>
         <input
+          name="author"
           value={state.author}
-          onChange={authorChange}
+          onChange={handleChangeState}
         />
       </div>
       <div>
         <textarea
+          name="content"
           value={state.content}
-          onChange={contentChange}  
+          onChange={handleChangeState}  
         />
       </div>
     </div>
