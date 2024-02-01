@@ -2,15 +2,23 @@ import React, { useState } from 'react'
 
 function DiaryEditor() {
 
-  const [author, setAuthor] = useState("");       // 일기 작성자 상태
-  const [content, setContent] = useState("");     // 일기 내용 상태
+  const [state, setState] = useState({
+    author: "",      // 일기 작성자 상태
+    content: "",     // 일기 내용 상태
+  });   
 
   const authorChange = (e) => {
-    setAuthor(e.target.value);
+    setState({
+      ...state,      // spread 연산자 사용 
+      author: e.target.value,
+    })
   }
 
   const contentChange = (e) => {
-    setContent(e.target.value);
+    setState({
+      ...state,
+      content: e.target.value,
+    })
   }
 
   return (
@@ -18,13 +26,13 @@ function DiaryEditor() {
       <h2>오늘의 일기</h2>
       <div>
         <input
-          value={author}
+          value={state.author}
           onChange={authorChange}
         />
       </div>
       <div>
         <textarea
-          value={content}
+          value={state.content}
           onChange={contentChange}  
         />
       </div>
