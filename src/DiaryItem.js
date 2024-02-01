@@ -2,7 +2,7 @@ import React from 'react'
 
 function DiaryItem({author, content, created_date, emotion, id}) {
   return (
-    <div className='info'>
+    <div className='DiaryItem'>
       <span>
         작성자 : {author} | 감정점수 : {emotion}
       </span>
