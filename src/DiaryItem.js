@@ -1,6 +1,12 @@
 import React from 'react'
 
-function DiaryItem({author, content, created_date, emotion, id}) {
+function DiaryItem({author, content, created_date, emotion, id, onDelete}) {
+
+  const onClick = () => {
+    if(window.confirm(`${id}번째 일기를 삭제하시겠습니까?`)){
+      onDelete(id);
+    }
+  }
   return (
     <div className='DiaryItem'>
       <span>
@@ -9,6 +15,7 @@ function DiaryItem({author, content, created_date, emotion, id}) {
       <br/>
       <span className="date">{new Date(created_date).toLocaleString()}</span>
       <div className='content'>{content}</div>
+      <button onClick={onClick}>삭제하기</button>
     </div>
   )
 }
