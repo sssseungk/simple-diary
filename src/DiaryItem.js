@@ -1,10 +1,10 @@
 import React from 'react'
 
-function DiaryItem({author, content, created_date, emotion, id, onDelete}) {
+function DiaryItem({author, content, created_date, emotion, id, onRemove}) {
 
   const onClick = () => {
     if(window.confirm(`${id}번째 일기를 삭제하시겠습니까?`)){
-      onDelete(id);
+      onRemove(id);
     }
   }
   return (
