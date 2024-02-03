@@ -8,6 +8,7 @@ function App() {
   const [data, setData] = useState([]);
   const dataId = useRef(0);
 
+  // 일기 생성 함수
   const onCreate = (author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
@@ -21,15 +22,25 @@ function App() {
     setData([newItem, ...data]);
   }
   
+  // 일기 삭제 함수
   const onRemove = (targetId) => {
     const newDiaryList = data.filter((it) => it.id !== targetId);
     setData(newDiaryList);
   }
 
+  // 일기 수정 함수
+  const onEdit = (targetId, newContent) => {
+    setData(
+      data.map((it) => 
+        it.id === targetId ? {...it, content:newContent}: it
+      )
+    );
+  }
+
   return (
     <div className='App'>
       <DiaryEditor onCreate={onCreate}/>
-      <DiaryList diaryList={data} onRemove={onRemove}/>
+      <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit}/>
     </div>
   )
 }
