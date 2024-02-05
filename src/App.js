@@ -1,12 +1,37 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DiaryEditor from './DiaryEditor';
 import './App.css';
 import DiaryList from './DiaryList';
 
+// https://jsonplaceholder.typicode.com/comments
 
 function App() {
   const [data, setData] = useState([]);
   const dataId = useRef(0);
+  
+  // 컴포넌트 mount 시점에 API 호출하여 comment 데이터 받아오는 함수
+  const getData = async() => {
+    const res = await fetch(
+      'https://jsonplaceholder.typicode.com/comments'
+    ).then((res)=>res.json());
+
+    // api로 받아온 데이터로 일기 데이터의 초기값 설정하기
+    const initData = res.slice(0, 20).map((it)=>{
+      return {
+        author: it.email,
+        content: it.body,
+        emotion: Math.floor(Math.random()*5)+1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      }
+    });   
+    setData(initData); 
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
 
   // 일기 생성 함수
   const onCreate = (author, content, emotion) => {
