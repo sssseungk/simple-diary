@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DiaryEditor from './DiaryEditor';
 import './App.css';
 import DiaryList from './DiaryList';
@@ -32,7 +32,7 @@ function App() {
 
 
   // 일기 생성 함수
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -42,8 +42,8 @@ function App() {
       id: dataId.current
     }
     dataId.current += 1;
-    setData([newItem, ...data]);
-  }
+    setData((data) => [newItem, ...data]);
+  }, []);
   
   // 일기 삭제 함수
   const onRemove = (targetId) => {
@@ -63,8 +63,6 @@ function App() {
   // React.memo를 활용한 함수 연산 최적화 (값처럼 사용함)
   const getDiaryAnalysis = useMemo(
     () => {
-    console.log('일기 분석 시작');
-
     // 감정이 3 이상인 일기의 수, 2 이하의 일기의 수, 좋은 감정 일기 비율
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
