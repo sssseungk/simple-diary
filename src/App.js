@@ -1,10 +1,38 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import DiaryEditor from './DiaryEditor';
 import './App.css';
 import DiaryList from './DiaryList';
 
+const reducer = (state, action) => {
+  switch(action.type){
+    case 'INIT': {
+      return action.data
+    }
+    case 'CREATE': {
+      const created_date = new Date().getTime();
+      const newItem = {
+        ...action.data,
+        created_date
+      }
+      return [newItem, ...state];
+    }
+    case 'REMOVE': {
+      return state.filter((it) => it.id !== action.targetId);
+    }
+    case 'EDIT': {
+      return state.map((it) => 
+        it.id === action.targetId ? 
+        {...it, content: action.newContent} : it);
+    }
+    default:
+    return state;
+  }
+}
+
 function App() {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+  // ! useReducer를 활용한 상태변화 로직 분리 (useState 대신)
+  const [data, dispatch] = useReducer(reducer, []);
   const dataId = useRef(0);
   
   // 컴포넌트 mount 시점에 API 호출하여 comment 데이터 받아오는 함수
@@ -23,7 +51,7 @@ function App() {
         id: dataId.current++,
       }
     });   
-    setData(initData); 
+    dispatch({type:"INIT", data:initData})
   }
 
   useEffect(() => {
@@ -33,32 +61,20 @@ function App() {
 
   // 일기 생성 함수
   const onCreate = useCallback((author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion, 
-      created_date,
-      id: dataId.current
-    }
+    dispatch({type: 'CREATE', data:{author, content, emotion, id:dataId.current}})
     dataId.current += 1;
-    setData((data) => [newItem, ...data]);
   }, []);
   
   // 일기 삭제 함수
   // 최적화 2
   const onRemove = useCallback((targetId) => {
-    setData(data => data.filter((it) => it.id !== targetId));
+    dispatch({type: 'REMOVE', targetId})
   }, []);
 
   // 일기 수정 함수
   // 최적화 2
   const onEdit = useCallback((targetId, newContent) => {
-    setData((data) =>
-      data.map((it) => 
-        it.id === targetId ? {...it, content:newContent}: it
-      )
-    );
+    dispatch({type: 'EDIT', targetId, newContent})
   }, []);
 
   // React.memo를 활용한 함수 연산 최적화 (값처럼 사용함)
