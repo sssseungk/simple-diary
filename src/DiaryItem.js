@@ -1,7 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-function DiaryItem({author, content, created_date, emotion, id, onRemove, onEdit}) {
-
+function DiaryItem({
+  author, 
+  content, 
+  created_date, 
+  emotion, 
+  id, 
+  // 최적화 해야하는 함수 2개
+  onRemove, 
+  onEdit,
+}) {
   const [isEdit, setIsEdit] = useState(false);   // 수정중인지 확인하는 상태
   const [localContent, setLocalContent] = useState(content);    // 수정한 텍스트
   const toggleIsEdit = () => setIsEdit(!isEdit);
@@ -71,4 +79,5 @@ function DiaryItem({author, content, created_date, emotion, id, onRemove, onEdit
   )
 }
 
-export default DiaryItem;
+// 최적화 1
+export default React.memo(DiaryItem);

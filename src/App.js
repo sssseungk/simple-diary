@@ -46,19 +46,20 @@ function App() {
   }, []);
   
   // 일기 삭제 함수
-  const onRemove = (targetId) => {
-    const newDiaryList = data.filter((it) => it.id !== targetId);
-    setData(newDiaryList);
-  }
+  // 최적화 2
+  const onRemove = useCallback((targetId) => {
+    setData(data => data.filter((it) => it.id !== targetId));
+  }, []);
 
   // 일기 수정 함수
-  const onEdit = (targetId, newContent) => {
-    setData(
+  // 최적화 2
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) => 
         it.id === targetId ? {...it, content:newContent}: it
       )
     );
-  }
+  }, []);
 
   // React.memo를 활용한 함수 연산 최적화 (값처럼 사용함)
   const getDiaryAnalysis = useMemo(
